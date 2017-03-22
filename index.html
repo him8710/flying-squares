@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+			margin:0;
+		}
+	</style>
+</head>
+<body>
+	<audio src="utwor-01.mp3"autoplay loop ></audio>
+	<script> 
+		//create canvas
+		var myCanvas = document.createElement('canvas');
+		myCanvas.width = window.innerWidth;
+		myCanvas.height = window.innerHeight;
+		// add canvas to body
+		document.body.appendChild(myCanvas);
+		var ctx = myCanvas.getContext('2d');
+		//variables
+		var fps = 60 ;
+		var lastTime = 0;
+		var allsquares = [];
+		var seeSquares = [];
+		//create random function
+		function rand(min,max){
+			return Math.floor(Math.random()*(max -min +1)+min);
+		}
+		//main program function
+		animateLoop();
+		function animateLoop(time){
+			requestAnimationFrame(animateLoop);
+			if(time - lastTime >= 1000/fps) {
+				lastTime = time;
+				ctx.fillStyle = "rgba(255,255,255,0.2)"
+				ctx.fillRect(0,0,myCanvas.width,myCanvas.height);
+				for(var i=0; i<5; i++){
+				allsquares.push({
+					x : myCanvas.width/2,
+					y : myCanvas.height/2,
+					h : rand(10,50),
+					speedX : rand(-1000,1000)/100,
+					speedY : rand(-1000,1000)/100,
+					r : rand(0,240),
+					g : rand(0,240),
+					b : rand(0,240)
+				});
+				}
+				seeSquares.length = 0;
+				for(var i =0; i < allsquares.length; i++){
+					var square = allsquares[i];
+					ctx.fillStyle = 'rgb('+square.r+','+square.g+','+square.b+')';
+					square.x += square.speedX;
+					square.y += square.speedY;
+					ctx.fillRect(square.x-square.h/2,square.y-square.h/2,square.h,square.h);
+					
+					if(square.x + square.h/2 > 0 && square.x - square.h/2 < myCanvas.width && square.y + square.h/2 > 0 && square.y - square.h/2 < myCanvas.height){
+						seeSquares.push(square);
+					}
+					}
+				allsquares = seeSquares.concat();
+				}
+
+			}
+		
+	</script>
+</body>
+</html>
